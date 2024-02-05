@@ -482,6 +482,43 @@ public struct ZipTest {
   }
 }
 
+public struct ZipMultiSequenceTest {
+  public let expected: [(Int, Int8, Int16, Int32)]
+  public let sequence: [Int]
+  public let other1: [Int8]
+  public let other2: [Int16]
+  public let other3: [Int32]
+  public let expectedLeftoverSequence: [Int]
+  public let expectedLeftoverOther1: [Int8]
+  public let expectedLeftoverOther2: [Int16]
+  public let expectedLeftoverOther3: [Int32]
+  public let loc: SourceLoc
+
+  public init(
+    _ expected: [(Int, Int8, Int16, Int32)],
+    sequences sequence: [Int],
+    _ other1: [Int8],
+    _ other2: [Int16],
+    _ other3: [Int32],
+    leftovers expectedLeftoverSequence: [Int],
+    _ leftoverOther1: [Int8],
+    _ leftoverOther2: [Int16],
+    _ leftoverOther3: [Int32],
+    file: String = #file, line: UInt = #line
+  ) {
+    self.expected = expected
+    self.sequence = sequence
+    self.other1 = other1
+    self.other2 = other2
+    self.other3 = other3
+    self.expectedLeftoverSequence = expectedLeftoverSequence
+    self.expectedLeftoverOther1 = leftoverOther1
+    self.expectedLeftoverOther2 = leftoverOther2
+    self.expectedLeftoverOther3 = leftoverOther3
+    self.loc = SourceLoc(file, line, comment: "test data")
+  }
+}
+
 
 public let elementsEqualTests: [ElementsEqualTest] = [
   ElementsEqualTest(true, [], [], [], []),
@@ -1599,6 +1636,138 @@ public let zipTests = [
     [ (10, 1), (20, 2), (30, 3) ],
     sequences: [ 10, 20, 30 ], [ 1, 2, 3 ],
     leftovers: [], []),
+]
+
+public let zipMultiSequenceTests = [
+  ZipMultiSequenceTest(
+    [],
+    sequences: [], [], [], [],
+    leftovers: [], [], [], []
+  ),
+
+  ZipMultiSequenceTest(
+    [],
+    sequences: [], [1], [1], [1],
+    leftovers: [], [1], [1], [1]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [], [1, 2], [1, 2], [1, 2],
+    leftovers: [], [1, 2], [1, 2], [1, 2]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [], [1, 2, 3], [1, 2, 3], [1, 2, 3],
+    leftovers: [], [1, 2, 3], [1, 2, 3], [1, 2, 3]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1], [], [1], [1],
+    leftovers: [], [], [1], [1]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1, 2], [], [1, 2], [1, 2],
+    leftovers: [2], [], [1, 2], [1, 2]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1, 2, 3], [], [1, 2, 3], [1, 2, 3],
+    leftovers: [2, 3], [], [1, 2, 3], [1, 2, 3]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1], [1], [], [1],
+    leftovers: [], [], [], [1]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1, 2], [1, 2], [], [1, 2],
+    leftovers: [2], [2], [], [1, 2]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1, 2, 3], [1, 2, 3], [], [1, 2, 3],
+    leftovers: [2, 3], [2, 3], [], [1, 2, 3]
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1], [1], [1], [],
+    leftovers: [], [], [], []
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1, 2], [1, 2], [1, 2], [],
+    leftovers: [2], [2], [2], []
+  ),
+  ZipMultiSequenceTest(
+    [],
+    sequences: [1, 2, 3], [1, 2, 3], [1, 2, 3], [],
+    leftovers: [2, 3], [2, 3], [2, 3], []
+  ),
+
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1)],
+    sequences: [1], [1], [1], [1],
+    leftovers: [], [], [], []
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2], [1, 2], [1, 2], [1, 2],
+    leftovers: [], [], [], []
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2), (3, 3, 3, 3)],
+    sequences: [1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3],
+    leftovers: [], [], [], []
+  ),
+
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2, 3], [1, 2], [1, 2], [1, 2],
+    leftovers: [], [], [], []
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2], [1, 2, 3], [1, 2], [1, 2],
+    leftovers: [], [3], [], []
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2], [1, 2], [1, 2, 3], [1, 2],
+    leftovers: [], [], [3], []
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2], [1, 2], [1, 2], [1, 2, 3],
+    leftovers: [], [], [], [3]
+  ),
+
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2], [1, 2], [1, 2, 3], [1, 2, 3, 4],
+    leftovers: [], [], [3], [3, 4]
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2], [1, 2], [1, 2, 3, 4], [1, 2, 3],
+    leftovers: [], [], [3, 4], [3]
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2, 3], [1, 2, 3, 4], [1, 2], [1, 2],
+    leftovers: [], [4], [], []
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2, 3, 4], [1, 2, 3], [1, 2], [1, 2],
+    leftovers: [4], [], [], []
+  ),
+  ZipMultiSequenceTest(
+    [(1, 1, 1, 1), (2, 2, 2, 2)],
+    sequences: [1, 2, 3, 4], [1, 2], [1, 2, 3], [1, 2],
+    leftovers: [4], [], [3], []
+  )
 ]
 
 public func callGenericUnderestimatedCount<S : Sequence>(_ s: S) -> Int {

@@ -101,6 +101,7 @@
         "Map.swift",
         "Join.swift",
         "Zip.swift",
+        "ZipMultiSequence.swift",
         "Filter.swift",
         "Reverse.swift",
         "Slice.swift",

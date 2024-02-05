@@ -237,6 +237,7 @@ split_embedded_sources(
   EMBEDDED UnsafeBufferPointerSlice.swift
     NORMAL VarArgs.swift
   EMBEDDED Zip.swift
+    NORMAL ZipMultiSequence.swift
     NORMAL "${SWIFT_SOURCE_DIR}/stdlib/linker-support/magic-symbols-for-install-name.c"
   )
 

@@ -1019,6 +1019,98 @@ SequenceTypeTests.test("zip") {
   }
 }
 
+// Check generic parameter names.
+@available(macOS 14.0, *)
+extension ZipMultiSequence.Iterator where repeat each Chain: TestProtocol1 {
+  var _generator1IsTestProtocol1: Bool {
+    fatalError("not implemented")
+  }
+}
+
+// Check generic parameter names.
+@available(macOS 14.0, *)
+extension ZipMultiSequence where repeat each Chain: TestProtocol1 {
+  var _sequence1IsTestProtocol1: Bool {
+    fatalError("not implemented")
+  }
+}
+
+if #available(macOS 14.0, *) {
+  SequenceTypeTests.test("ZipSequences)") {
+    typealias Element =
+    (OpaqueValue<Int>, OpaqueValue<Int8>, OpaqueValue<Int16>, OpaqueValue<Int32>)
+
+    func compareElements(_ lhs: Element, rhs: Element) -> Bool {
+      return lhs.0.value == rhs.0.value
+          && lhs.1.value == rhs.1.value
+          && lhs.2.value == rhs.2.value
+          && lhs.3.value == rhs.3.value
+    }
+
+    for test in zipMultiSequenceTests {
+      let s = MinimalSequence<OpaqueValue<Int>>(
+        elements: test.sequence.map(OpaqueValue.init)
+      )
+      let other1 = MinimalSequence<OpaqueValue<Int8>>(
+        elements: test.other1.map(OpaqueValue.init)
+      )
+      let other2 = MinimalSequence<OpaqueValue<Int16>>(
+        elements: test.other2.map(OpaqueValue.init)
+      )
+      let other3 = MinimalSequence<OpaqueValue<Int32>>(
+        elements: test.other3.map(OpaqueValue.init)
+      )
+
+      var result = zip(sequences: s, other1, other2, other3)
+
+      expectType(
+        ZipMultiSequence<
+          MinimalSequence<OpaqueValue<Int>>,
+          MinimalSequence<OpaqueValue<Int8>>,
+          MinimalSequence<OpaqueValue<Int16>>,
+          MinimalSequence<OpaqueValue<Int32>>
+        >.self,
+        &result
+      )
+  
+      // Check for expected result and check the ZipMultiSequence's Sequence
+      // conformance.
+      checkSequence(
+        test.expected.map {
+          (OpaqueValue($0), OpaqueValue($1), OpaqueValue($2), OpaqueValue($3)) 
+        },
+        result,
+        stackTrace: SourceLocStack().with(test.loc),
+        sameValue: compareElements
+      )
+
+      // Check leftovers *after* doing checkSequence(), not before, to ensure
+      // that checkSequence() didn't force us to consume more elements than
+      // needed.
+      expectEqual(
+        test.expectedLeftoverSequence,
+        s.map { $0.value },
+        stackTrace: SourceLocStack().with(test.loc)
+      )
+      expectEqual(
+        test.expectedLeftoverOther1,
+        other1.map { $0.value },
+        stackTrace: SourceLocStack().with(test.loc)
+      )
+      expectEqual(
+        test.expectedLeftoverOther2,
+        other2.map { $0.value },
+        stackTrace: SourceLocStack().with(test.loc)
+      )
+      expectEqual(
+        test.expectedLeftoverOther3,
+        other3.map { $0.value },
+        stackTrace: SourceLocStack().with(test.loc)
+      )
+    }
+  }
+}
+
 //===----------------------------------------------------------------------===//
 // underestimatedCount
 //===----------------------------------------------------------------------===//
