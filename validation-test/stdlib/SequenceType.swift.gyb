@@ -1020,7 +1020,7 @@ SequenceTypeTests.test("zip") {
 }
 
 // Check generic parameter names.
-@available(macOS 14.0, *)
+@available(SwiftStdlib 9999, *)
 extension ZipMultiSequence.Iterator where repeat each Chain: TestProtocol1 {
   var _generator1IsTestProtocol1: Bool {
     fatalError("not implemented")
@@ -1028,14 +1028,14 @@ extension ZipMultiSequence.Iterator where repeat each Chain: TestProtocol1 {
 }
 
 // Check generic parameter names.
-@available(macOS 14.0, *)
+@available(SwiftStdlib 9999, *)
 extension ZipMultiSequence where repeat each Chain: TestProtocol1 {
   var _sequence1IsTestProtocol1: Bool {
     fatalError("not implemented")
   }
 }
 
-if #available(macOS 14.0, *) {
+if #available(SwiftStdlib 9999, *) {
   SequenceTypeTests.test("ZipSequences)") {
     typealias Element =
     (OpaqueValue<Int>, OpaqueValue<Int8>, OpaqueValue<Int16>, OpaqueValue<Int32>)
@@ -1072,7 +1072,7 @@ if #available(macOS 14.0, *) {
         >.self,
         &result
       )
-  
+
       // Check for expected result and check the ZipMultiSequence's Sequence
       // conformance.
       checkSequence(
